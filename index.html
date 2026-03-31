@@ -38,13 +38,13 @@
             100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
         }
 
-        /* Надпись "for you": вернули ПО ЦЕНТРУ */
+        /* Надпись "for you": ПО ЦЕНТРУ */
         .for-you {
             font-family: 'Great Vibes', cursive;
-            font-size: 38px; /* Чуть увеличили размер */
+            font-size: 38px;
             color: #5C1D1D;
             position: absolute;
-            top: 40px; /* Отступ сверху */
+            top: 40px;
             left: 50%;
             transform: translateX(-50%); /* Центрирование */
             z-index: 10;
@@ -61,7 +61,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 60px; /* Сбалансировали место под надписью */
+            margin-top: 60px;
             z-index: 5;
         }
 
@@ -115,7 +115,7 @@
         // Функция создания бордовых пылинок
         function createParticles() {
             const body = document.getElementById('body');
-            const particleCount = 50; // Оставили густоту
+            const particleCount = 50;
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -138,25 +138,4 @@
             }
         }
 
-        function openGift() {
-            const container = document.getElementById('giftContainer');
-            if (container.classList.contains('open')) return;
-
-            container.classList.add('open');
-            createParticles(); // Включаем бордовые пылинки
-
-            // --- БЛОК КОНФЕТТИ: Сделали аккуратным и быстрым ---
-
-            // Одиночный, аккуратный залп конфетти
-            confetti({
-                particleCount: 50, // Значительно меньше конфетти
-                spread: 70, // Не слишком широкий разлет
-                origin: { y: 0.6 }, // Залп идет из центра конверта
-                colors: ['#5C1D1D', '#FAE9C3', '#ffffff'] // Бордовый, бежевый, белый
-            });
-
-            // (Предыдущий длинный цикл frame() удален, чтобы анимация не затягивалась)
-        }
-    </script>
-</body>
-</html>
+        function openGift()
