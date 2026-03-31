@@ -3,113 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Подарок для тебя!</title>
+    <title>Подарок для тебя</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         body {
             margin: 0;
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: #e2ff00; /* Тот самый кислотно-желтый цвет ЗЯ */
+            background: linear-gradient(180deg, #FAE9C3 0%, #FFFFFF 100%);
             overflow: hidden;
             font-family: sans-serif;
+        }
+
+        .for-you {
+            font-family: 'Great Vibes', cursive;
+            font-size: 45px;
+            color: #5C1D1D;
+            margin-bottom: 30px;
+            z-index: 10;
+            transition: opacity 0.5s ease;
         }
 
         .container {
             position: relative;
             width: 320px;
-            height: 450px;
+            height: 400px;
             cursor: pointer;
             display: flex;
             justify-content: center;
-            align-items: flex-end;
+            align-items: center;
         }
 
         /* Конверт */
         .envelope {
             width: 100%;
             z-index: 3;
-            transition: transform 0.4s ease;
+            transition: all 0.8s ease; /* Плавное исчезновение */
         }
 
         /* Сертификат */
         .certificate {
             position: absolute;
             width: 90%;
-            bottom: 20px;
             z-index: 2;
             opacity: 0;
-            transform: translateY(0);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(0) scale(1);
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0);
         }
 
-        /* Анимация при открытии */
+        /* Состояние после клика */
+        .container.open .envelope {
+            opacity: 0;
+            transform: translateY(100px); /* Уходит вниз */
+            pointer-events: none;
+        }
+
         .container.open .certificate {
             opacity: 1;
-            transform: translateY(-220px); /* Вылетает вверх */
-            animation: shake 0.5s ease-in-out 0.8s; /* Тряска начнется после вылета */
+            /* Вылетает вверх, затем встает по центру и чуть увеличивается */
+            transform: translateY(-50px) scale(1.1); 
+            z-index: 10;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1); /* Добавляем мягкую тень */
+            animation: shake 0.5s ease-in-out 1s;
         }
 
-        .container.open .envelope {
-            transform: scale(0.9) translateY(20px); /* Конверт чуть приседает */
+        .container.open .for-you {
+            opacity: 0.3; /* Надпись сверху становится бледнее, чтобы не отвлекать */
         }
 
-        /* Эффект тряски */
         @keyframes shake {
-            0%, 100% { transform: translateY(-220px) rotate(0deg); }
-            25% { transform: translateY(-220px) rotate(2deg); }
-            75% { transform: translateY(-220px) rotate(-2deg); }
-        }
-
-        /* Надпись сверху как в видео */
-        .title {
-            position: absolute;
-            top: 50px;
-            font-size: 40px;
-            font-weight: 900;
-            color: rgba(0,0,0,0.1);
-            text-transform: uppercase;
-            text-align: center;
-            width: 100%;
-            line-height: 0.9;
+            0%, 100% { transform: translateY(-50px) scale(1.1) rotate(0deg); }
+            25% { transform: translateY(-50px) scale(1.1) rotate(1.5deg); }
+            75% { transform: translateY(-50px) scale(1.1) rotate(-1.5deg); }
         }
     </style>
 </head>
 <body>
 
-    <div class="title">ВАУ,<br>ПОДАРОК!</div>
+    <div class="for-you">for you</div>
 
     <div class="container" id="giftContainer" onclick="openGift()">
-        <img src="certificate.png" class="certificate" alt="Сертификат">
-        <img src="envelope.png" class="envelope" alt="Конверт">
+        <img src="certificate.png" class="certificate">
+        <img src="envelope.png" class="envelope">
     </div>
 
     <script>
         function openGift() {
             const container = document.getElementById('giftContainer');
-            
-            // Если уже открыто, второй раз не срабатывает
             if (container.classList.contains('open')) return;
 
             container.classList.add('open');
 
-            // Запуск конфетти
-            const count = 200;
-            const defaults = { origin: { y: 0.7 } };
+            // Красивый салют конфетти
+            var duration = 2.5 * 1000;
+            var end = Date.now() + duration;
 
-            function fire(particleRatio, opts) {
-                confetti(Object.assign({}, defaults, opts, {
-                    particleCount: Math.floor(count * particleRatio)
-                }));
-            }
+            (function frame() {
+              confetti({
+                particleCount: 4,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0, y: 0.6 },
+                colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
+              });
+              confetti({
+                particleCount: 4,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1, y: 0.6 },
+                colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
+              });
 
-            fire(0.25, { spread: 26, startVelocity: 55 });
-            fire(0.2, { spread: 60 });
-            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-            fire(0.1, { spread: 120, startVelocity: 45 });
+              if (Date.now() < end) {
+                requestAnimationFrame(frame);
+              }
+            }());
         }
     </script>
 </body>
