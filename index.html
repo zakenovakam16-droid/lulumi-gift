@@ -142,23 +142,45 @@
             container.classList.add('open');
             createParticles();
 
-            // Красивый двойной залп конфетти
-            confetti({
-                particleCount: 140,
-                spread: 100,
-                origin: { y: 0.6 },
-                colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
-            });
+            // --- БЛОК С МАКСИМУМОМ КОНФЕТТИ ---
 
+            // Функция для создания мощного залпа
+            function shootConfetti(angle, scalar) {
+                confetti({
+                    particleCount: 150, // Много частиц в одном залпе
+                    angle: angle,
+                    spread: 80, // Достаточно широкий разлет
+                    scalar: scalar, // Размер частиц
+                    origin: { y: 0.65 }, // Залп идет из центра конверта
+                    colors: ['#5C1D1D', '#FAE9C3', '#ffffff'] // Бордовый, бежевый, белый
+                });
+            }
+
+            // Залп №1: Центральный, мощный
+            shootConfetti(90, 1.2);
+
+            // Залп №2: Чуть левее
+            setTimeout(() => {
+                shootConfetti(70, 1.1);
+            }, 150);
+
+            // Залп №3: Чуть правее
+            setTimeout(() => {
+                shootConfetti(110, 1.1);
+            }, 300);
+
+            // Залп №4: "Финал", мелкие конфетти вверх
             setTimeout(() => {
                 confetti({
-                    particleCount: 60,
+                    particleCount: 200, // Очень много мелких частиц
                     angle: 90,
-                    spread: 45,
+                    spread: 60,
+                    velocity: 55, // Быстрые
+                    scalar: 0.8, // Мелкие
                     origin: { y: 0.7 },
                     colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
                 });
-            }, 250);
+            }, 500); // Через полсекунды
         }
     </script>
 </body>
