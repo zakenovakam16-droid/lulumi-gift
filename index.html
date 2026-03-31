@@ -14,18 +14,48 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            /* Бежево-белый градиент */
             background: linear-gradient(180deg, #FAE9C3 0%, #FFFFFF 100%);
             overflow: hidden;
             font-family: sans-serif;
+            position: relative; /* Для позиционирования пылинок */
         }
 
+        /* НАСТРОЙКИ ПЫЛИНОК (на фоне) */
+        .particle {
+            position: absolute;
+            background-color: rgba(92, 29, 29, 0.2); /* Бордовый цвет с высокой прозрачностью */
+            border-radius: 50%; /* Делаем их круглыми */
+            pointer-events: none; /* Чтобы не мешали кликам */
+            z-index: 1; /* Самый нижний слой */
+            opacity: 0; /* Изначально невидимы */
+            transition: opacity 1s ease; /* Плавное появление после открытия */
+        }
+
+        /* Анимация полета пылинок */
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        }
+
+        /* Класс, который включает пылинки */
+        body.open .particle {
+            opacity: 1;
+        }
+
+        /* Надпись "for you" в верхнем левом углу */
         .for-you {
             font-family: 'Great Vibes', cursive;
-            font-size: 45px;
+            font-size: 32px;
             color: #5C1D1D;
-            margin-bottom: 30px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
             z-index: 10;
             transition: opacity 0.5s ease;
+            opacity: 0.9;
         }
 
         .container {
@@ -36,13 +66,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-top: 50px;
+            z-index: 5; /* Слой над пылинками */
         }
 
         /* Конверт */
         .envelope {
             width: 100%;
             z-index: 3;
-            transition: all 0.8s ease; /* Плавное исчезновение */
+            transition: all 0.8s ease;
         }
 
         /* Сертификат */
@@ -56,50 +88,88 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0);
         }
 
-        /* Состояние после клика */
+        /* Анимация при клике */
         .container.open .envelope {
             opacity: 0;
-            transform: translateY(100px); /* Уходит вниз */
+            transform: translateY(100px);
             pointer-events: none;
         }
 
         .container.open .certificate {
             opacity: 1;
-            /* Вылетает вверх, затем встает по центру и чуть увеличивается */
             transform: translateY(-50px) scale(1.1); 
             z-index: 10;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1); /* Добавляем мягкую тень */
-            animation: shake 0.5s ease-in-out 1s;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            /* МЯГКАЯ ТРЯСКА (изменили animation) */
+            animation: softSway 3s ease-in-out 1s infinite; /* infinite для постоянного покачивания */
         }
 
-        .container.open .for-you {
-            opacity: 0.3; /* Надпись сверху становится бледнее, чтобы не отвлекать */
-        }
-
-        @keyframes shake {
+        /* МЯГКОЕ ПОКАЧИВАНИЕ (вместо тряски) */
+        @keyframes softSway {
             0%, 100% { transform: translateY(-50px) scale(1.1) rotate(0deg); }
-            25% { transform: translateY(-50px) scale(1.1) rotate(1.5deg); }
-            75% { transform: translateY(-50px) scale(1.1) rotate(-1.5deg); }
+            25% { transform: translateY(-51px) scale(1.105) rotate(0.5deg); } /* Очень маленький угол и легкий сдвиг */
+            75% { transform: translateY(-49px) scale(1.095) rotate(-0.5deg); }
         }
     </style>
 </head>
-<body>
+<body id="body">
 
     <div class="for-you">for you</div>
 
     <div class="container" id="giftContainer" onclick="openGift()">
-        <img src="certificate.png" class="certificate">
-        <img src="envelope.png" class="envelope">
+        <img src="certificate.png" class="certificate" alt="Сертификат">
+        <img src="envelope.png" class="envelope" alt="Конверт">
     </div>
 
     <script>
+        // Функция создания пылинок
+        function createParticles() {
+            const body = document.getElementById('body');
+            const particleCount = 15; // Количество пылинок (не делай слишком много)
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Случайный размер (маленькие: от 2px до 6px)
+                const size = Math.random() * 4 + 2 + 'px';
+                particle.style.width = size;
+                particle.style.height = size;
+                
+                // Случайное положение по горизонтали
+                particle.style.left = Math.random() * 100 + 'vw';
+                
+                // Случайное положение по вертикали (чтобы летели снизу вверх)
+                particle.style.bottom = Math.random() * -20 + 'vh';
+                
+                // Случайная задержка анимации (чтобы летели не все сразу)
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                
+                // Случайная длительность (медленные: от 10с до 20с)
+                particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+                
+                // Добавляем анимацию полета
+                particle.style.animationName = 'float';
+                particle.style.animationIterationCount = 'infinite';
+                particle.style.animationTimingFunction = 'linear';
+
+                body.appendChild(particle);
+            }
+        }
+
         function openGift() {
             const container = document.getElementById('giftContainer');
+            const body = document.getElementById('body');
+            
             if (container.classList.contains('open')) return;
 
             container.classList.add('open');
+            body.classList.add('open'); // Включаем пылинки
 
-            // Красивый салют конфетти
+            // Создаем пылинки ТОЛЬКО после клика
+            createParticles();
+
+            // Красивый салют конфетти (оставляем, он динамичный)
             var duration = 2.5 * 1000;
             var end = Date.now() + duration;
 
