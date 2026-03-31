@@ -14,15 +14,17 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            /* Твой бежевый градиент из Figma */
             background: linear-gradient(180deg, #FAE9C3 0%, #FFFFFF 100%);
             overflow: hidden;
             font-family: sans-serif;
             position: relative;
         }
 
+        /* Бордовые пылинки на фоне */
         .particle {
             position: absolute;
-            background-color: rgba(92, 29, 29, 0.4);
+            background-color: rgba(92, 29, 29, 0.5);
             border-radius: 50%;
             pointer-events: none;
             z-index: 1;
@@ -36,19 +38,20 @@
             100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
         }
 
+        /* Надпись "for you" по центру */
         .for-you {
             font-family: 'Great Vibes', cursive;
             font-size: 38px;
             color: #5C1D1D;
             position: absolute;
-            top: 40px;
+            top: 45px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
             opacity: 0.9;
             width: 100%;
             text-align: center;
-            /* ВАЖНОЕ ИСПРАВЛЕНИЕ ТУТ: */
+            /* Позволяет кликать "сквозь" текст */
             pointer-events: none; 
         }
 
@@ -62,15 +65,13 @@
             align-items: center;
             margin-top: 60px;
             z-index: 5;
-            /* Добавляем, чтобы область клика была четкой */
-            background: transparent;
         }
 
         .envelope {
             width: 100%;
             z-index: 3;
             transition: all 0.8s ease;
-            pointer-events: none; /* Клик ловит сам контейнер */
+            pointer-events: none;
         }
 
         .certificate {
@@ -83,6 +84,7 @@
             pointer-events: none;
         }
 
+        /* Анимация открытия */
         .container.open .envelope {
             opacity: 0;
             transform: translateY(120px);
@@ -96,6 +98,7 @@
             animation: softSway 4s ease-in-out 1.2s infinite;
         }
 
+        /* Плавное покачивание сертификата */
         @keyframes softSway {
             0%, 100% { transform: translateY(-60px) scale(1.15) rotate(0deg); }
             50% { transform: translateY(-65px) scale(1.16) rotate(0.8deg); }
@@ -121,4 +124,42 @@
                 const size = Math.random() * 4 + 2 + 'px';
                 particle.style.width = size;
                 particle.style.height = size;
-                particle.style.left = Math.random() *
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.bottom = Math.random() * -15 + 'vh';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = Math.random() * 15 + 15 + 's';
+                particle.style.animationName = 'float';
+                particle.style.animationIterationCount = 'infinite';
+                particle.style.animationTimingFunction = 'linear';
+                body.appendChild(particle);
+            }
+        }
+
+        function openGift() {
+            const container = document.getElementById('giftContainer');
+            if (container.classList.contains('open')) return;
+
+            container.classList.add('open');
+            createParticles();
+
+            // Красивый двойной залп конфетти
+            confetti({
+                particleCount: 140,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
+            });
+
+            setTimeout(() => {
+                confetti({
+                    particleCount: 60,
+                    angle: 90,
+                    spread: 45,
+                    origin: { y: 0.7 },
+                    colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
+                });
+            }, 250);
+        }
+    </script>
+</body>
+</html>
