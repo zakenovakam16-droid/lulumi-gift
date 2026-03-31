@@ -14,47 +14,38 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* Бежево-белый градиент */
             background: linear-gradient(180deg, #FAE9C3 0%, #FFFFFF 100%);
             overflow: hidden;
             font-family: sans-serif;
-            position: relative; /* Для позиционирования пылинок */
+            position: relative;
         }
 
-        /* НАСТРОЙКИ ПЫЛИНОК (на фоне) */
+        /* Пылинки: больше бордовости */
         .particle {
             position: absolute;
-            background-color: rgba(92, 29, 29, 0.2); /* Бордовый цвет с высокой прозрачностью */
-            border-radius: 50%; /* Делаем их круглыми */
-            pointer-events: none; /* Чтобы не мешали кликам */
-            z-index: 1; /* Самый нижний слой */
-            opacity: 0; /* Изначально невидимы */
-            transition: opacity 1s ease; /* Плавное появление после открытия */
+            background-color: rgba(92, 29, 29, 0.6); /* Еще более насыщенный бордовый */
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
         }
 
-        /* Анимация полета пылинок */
         @keyframes float {
             0% { transform: translateY(0) translateX(0); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+            100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
         }
 
-        /* Класс, который включает пылинки */
-        body.open .particle {
-            opacity: 1;
-        }
-
-        /* Надпись "for you" в верхнем левом углу */
+        /* Надпись "for you": сдвинули вправо, чтобы не съедалась буква f */
         .for-you {
             font-family: 'Great Vibes', cursive;
-            font-size: 32px;
+            font-size: 35px;
             color: #5C1D1D;
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 30px;
+            left: 40px; /* Увеличили отступ слева с 20px до 40px */
             z-index: 10;
-            transition: opacity 0.5s ease;
             opacity: 0.9;
         }
 
@@ -66,49 +57,43 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 50px;
-            z-index: 5; /* Слой над пылинками */
+            margin-top: 60px;
+            z-index: 5;
         }
 
-        /* Конверт */
         .envelope {
             width: 100%;
             z-index: 3;
             transition: all 0.8s ease;
         }
 
-        /* Сертификат */
         .certificate {
             position: absolute;
-            width: 90%;
+            width: 95%;
             z-index: 2;
             opacity: 0;
             transform: translateY(0) scale(1);
-            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0,0,0,0);
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Анимация при клике */
         .container.open .envelope {
             opacity: 0;
-            transform: translateY(100px);
+            transform: translateY(120px);
             pointer-events: none;
         }
 
         .container.open .certificate {
             opacity: 1;
-            transform: translateY(-50px) scale(1.1); 
+            transform: translateY(-60px) scale(1.15); 
             z-index: 10;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-            /* МЯГКАЯ ТРЯСКА (изменили animation) */
-            animation: softSway 3s ease-in-out 1s infinite; /* infinite для постоянного покачивания */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            animation: softSway 4s ease-in-out 1.2s infinite;
         }
 
-        /* МЯГКОЕ ПОКАЧИВАНИЕ (вместо тряски) */
+        /* Плавное люксовое покачивание */
         @keyframes softSway {
-            0%, 100% { transform: translateY(-50px) scale(1.1) rotate(0deg); }
-            25% { transform: translateY(-51px) scale(1.105) rotate(0.5deg); } /* Очень маленький угол и легкий сдвиг */
-            75% { transform: translateY(-49px) scale(1.095) rotate(-0.5deg); }
+            0%, 100% { transform: translateY(-60px) scale(1.15) rotate(0deg); }
+            50% { transform: translateY(-65px) scale(1.16) rotate(0.8deg); }
         }
     </style>
 </head>
@@ -122,33 +107,23 @@
     </div>
 
     <script>
-        // Функция создания пылинок
         function createParticles() {
             const body = document.getElementById('body');
-            const particleCount = 15; // Количество пылинок (не делай слишком много)
+            const particleCount = 60; // Увеличили количество до 60 для густоты
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
-                // Случайный размер (маленькие: от 2px до 6px)
                 const size = Math.random() * 4 + 2 + 'px';
                 particle.style.width = size;
                 particle.style.height = size;
-                
-                // Случайное положение по горизонтали
                 particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.bottom = Math.random() * -15 + 'vh';
                 
-                // Случайное положение по вертикали (чтобы летели снизу вверх)
-                particle.style.bottom = Math.random() * -20 + 'vh';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = Math.random() * 15 + 15 + 's';
                 
-                // Случайная задержка анимации (чтобы летели не все сразу)
-                particle.style.animationDelay = Math.random() * 5 + 's';
-                
-                // Случайная длительность (медленные: от 10с до 20с)
-                particle.style.animationDuration = Math.random() * 10 + 10 + 's';
-                
-                // Добавляем анимацию полета
                 particle.style.animationName = 'float';
                 particle.style.animationIterationCount = 'infinite';
                 particle.style.animationTimingFunction = 'linear';
@@ -159,33 +134,27 @@
 
         function openGift() {
             const container = document.getElementById('giftContainer');
-            const body = document.getElementById('body');
-            
             if (container.classList.contains('open')) return;
 
             container.classList.add('open');
-            body.classList.add('open'); // Включаем пылинки
-
-            // Создаем пылинки ТОЛЬКО после клика
             createParticles();
 
-            // Красивый салют конфетти (оставляем, он динамичный)
-            var duration = 2.5 * 1000;
+            var duration = 3 * 1000;
             var end = Date.now() + duration;
 
             (function frame() {
               confetti({
-                particleCount: 4,
+                particleCount: 5,
                 angle: 60,
                 spread: 55,
-                origin: { x: 0, y: 0.6 },
+                origin: { x: 0, y: 0.65 },
                 colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
               });
               confetti({
-                particleCount: 4,
+                particleCount: 5,
                 angle: 120,
                 spread: 55,
-                origin: { x: 1, y: 0.6 },
+                origin: { x: 1, y: 0.65 },
                 colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
               });
 
