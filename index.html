@@ -14,16 +14,17 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            /* Бежево-белый градиент */
             background: linear-gradient(180deg, #FAE9C3 0%, #FFFFFF 100%);
             overflow: hidden;
             font-family: sans-serif;
             position: relative;
         }
 
-        /* Пылинки: больше бордовости */
+        /* Пылинки */
         .particle {
             position: absolute;
-            background-color: rgba(92, 29, 29, 0.6); /* Еще более насыщенный бордовый */
+            background-color: rgba(92, 29, 29, 0.4); /* Насыщенный бордовый */
             border-radius: 50%;
             pointer-events: none;
             z-index: 1;
@@ -37,16 +38,19 @@
             100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
         }
 
-        /* Надпись "for you": сдвинули вправо, чтобы не съедалась буква f */
+        /* Надпись "for you": вернули ПО ЦЕНТРУ */
         .for-you {
             font-family: 'Great Vibes', cursive;
-            font-size: 35px;
+            font-size: 38px; /* Чуть увеличили размер */
             color: #5C1D1D;
             position: absolute;
-            top: 30px;
-            left: 40px; /* Увеличили отступ слева с 20px до 40px */
+            top: 40px; /* Отступ сверху */
+            left: 50%;
+            transform: translateX(-50%); /* Центрирование */
             z-index: 10;
             opacity: 0.9;
+            width: 100%;
+            text-align: center;
         }
 
         .container {
@@ -57,7 +61,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 60px;
+            margin-top: 60px; /* Сбалансировали место под надписью */
             z-index: 5;
         }
 
@@ -84,10 +88,11 @@
 
         .container.open .certificate {
             opacity: 1;
+            /* Вылетает вверх, центрируется и увеличивается */
             transform: translateY(-60px) scale(1.15); 
             z-index: 10;
             box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            animation: softSway 4s ease-in-out 1.2s infinite;
+            animation: softSway 4s ease-in-out 1.2s infinite; /* Медленное покачивание */
         }
 
         /* Плавное люксовое покачивание */
@@ -107,9 +112,10 @@
     </div>
 
     <script>
+        // Функция создания бордовых пылинок
         function createParticles() {
             const body = document.getElementById('body');
-            const particleCount = 60; // Увеличили количество до 60 для густоты
+            const particleCount = 50; // Оставили густоту
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -137,31 +143,19 @@
             if (container.classList.contains('open')) return;
 
             container.classList.add('open');
-            createParticles();
+            createParticles(); // Включаем бордовые пылинки
 
-            var duration = 3 * 1000;
-            var end = Date.now() + duration;
+            // --- БЛОК КОНФЕТТИ: Сделали аккуратным и быстрым ---
 
-            (function frame() {
-              confetti({
-                particleCount: 5,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0, y: 0.65 },
-                colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
-              });
-              confetti({
-                particleCount: 5,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1, y: 0.65 },
-                colors: ['#5C1D1D', '#FAE9C3', '#ffffff']
-              });
+            // Одиночный, аккуратный залп конфетти
+            confetti({
+                particleCount: 50, // Значительно меньше конфетти
+                spread: 70, // Не слишком широкий разлет
+                origin: { y: 0.6 }, // Залп идет из центра конверта
+                colors: ['#5C1D1D', '#FAE9C3', '#ffffff'] // Бордовый, бежевый, белый
+            });
 
-              if (Date.now() < end) {
-                requestAnimationFrame(frame);
-              }
-            }());
+            // (Предыдущий длинный цикл frame() удален, чтобы анимация не затягивалась)
         }
     </script>
 </body>
