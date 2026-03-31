@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Твой Подарок</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4; /* Цвет фона страницы */
+            margin: 0;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.02);
+        }
+
+        /* Конверт */
+        .envelope {
+            position: relative;
+            width: 300px; /* Настрой под свои размеры */
+            height: 200px;
+            z-index: 2;
+        }
+
+        /* Сертификат (спрятан внутри) */
+        .certificate {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px; /* Чуть уже конверта */
+            z-index: 1;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Анимация при активации */
+        .envelope-wrapper.open .certificate {
+            transform: translate(-50%, -150px); /* Вылетает вверх */
+        }
+
+        .envelope-wrapper.open {
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="envelope-wrapper" onclick="openEnvelope(this)">
+        <img src="certificate.png" class="certificate" alt="Сертификат">
+        <img src="envelope.png" class="envelope" alt="Конверт">
+    </div>
+
+    <script>
+        function openEnvelope(element) {
+            element.classList.add('open');
+        }
+    </script>
+</body>
+</html>
