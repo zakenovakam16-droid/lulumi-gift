@@ -3,68 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Твой Подарок</title>
+    <title>Подарок для тебя!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         body {
+            margin: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4; /* Цвет фона страницы */
-            margin: 0;
+            background-color: #e2ff00; /* Тот самый кислотно-желтый цвет ЗЯ */
             overflow: hidden;
             font-family: sans-serif;
         }
 
-        .envelope-wrapper {
+        .container {
             position: relative;
+            width: 320px;
+            height: 450px;
             cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .envelope-wrapper:hover {
-            transform: scale(1.02);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
         }
 
         /* Конверт */
         .envelope {
-            position: relative;
-            width: 300px; /* Настрой под свои размеры */
-            height: 200px;
-            z-index: 2;
+            width: 100%;
+            z-index: 3;
+            transition: transform 0.4s ease;
         }
 
-        /* Сертификат (спрятан внутри) */
+        /* Сертификат */
         .certificate {
             position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 260px; /* Чуть уже конверта */
-            z-index: 1;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 90%;
+            bottom: 20px;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(0);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Анимация при активации */
-        .envelope-wrapper.open .certificate {
-            transform: translate(-50%, -150px); /* Вылетает вверх */
+        /* Анимация при открытии */
+        .container.open .certificate {
+            opacity: 1;
+            transform: translateY(-220px); /* Вылетает вверх */
+            animation: shake 0.5s ease-in-out 0.8s; /* Тряска начнется после вылета */
         }
 
-        .envelope-wrapper.open {
-            cursor: default;
+        .container.open .envelope {
+            transform: scale(0.9) translateY(20px); /* Конверт чуть приседает */
+        }
+
+        /* Эффект тряски */
+        @keyframes shake {
+            0%, 100% { transform: translateY(-220px) rotate(0deg); }
+            25% { transform: translateY(-220px) rotate(2deg); }
+            75% { transform: translateY(-220px) rotate(-2deg); }
+        }
+
+        /* Надпись сверху как в видео */
+        .title {
+            position: absolute;
+            top: 50px;
+            font-size: 40px;
+            font-weight: 900;
+            color: rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            text-align: center;
+            width: 100%;
+            line-height: 0.9;
         }
     </style>
 </head>
 <body>
 
-    <div class="envelope-wrapper" onclick="openEnvelope(this)">
+    <div class="title">ВАУ,<br>ПОДАРОК!</div>
+
+    <div class="container" id="giftContainer" onclick="openGift()">
         <img src="certificate.png" class="certificate" alt="Сертификат">
         <img src="envelope.png" class="envelope" alt="Конверт">
     </div>
 
     <script>
-        function openEnvelope(element) {
-            element.classList.add('open');
+        function openGift() {
+            const container = document.getElementById('giftContainer');
+            
+            // Если уже открыто, второй раз не срабатывает
+            if (container.classList.contains('open')) return;
+
+            container.classList.add('open');
+
+            // Запуск конфетти
+            const count = 200;
+            const defaults = { origin: { y: 0.7 } };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
         }
     </script>
 </body>
